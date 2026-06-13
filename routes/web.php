@@ -1,10 +1,19 @@
 <?php
 
-use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductController;
 
-Route::get('/', function () {
-    return view('welcome');
+// Halaman login
+Route::get('/', [AuthController::class, 'showLogin'])->name('login');
+
+// Proses login
+Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+
+// Logout
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Halaman product hanya bisa diakses setelah login
+Route::middleware('auth')->group(function () {
+    Route::resource('products', ProductController::class);
 });
-
-Route::resource('products',ProductController::class);
